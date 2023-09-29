@@ -1,0 +1,97 @@
+---
+layout: default
+---
+ 
+<ul class="breadcrumb border">
+    <li><a href="{{ site.baseurl }}">Home</a></li>
+    {% for crumb in page.url | split: '/' %}
+      {% if crumb != '' %}
+        {% capture crumb_slug %}{{ crumb | slugify }}{% endcapture %}
+        {% capture crumb_title %}{{ crumb_slug | replace: '-', ' ' | capitalize }}{% endcapture %}
+        <li>
+          {% if forloop.last %}
+            {{ crumb_title }}
+          {% else %}
+            <a href="{{ site.baseurl }}{{ crumb }}">{{ crumb_title }}</a>
+          {% endif %}
+        </li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+  
+  
+
+<div class="row site">
+    <div class="sm-12 md-8 col paper"> 
+        <article class="article padding-left-large">
+            {%- if page.title -%}
+              <h1 class="article-title">{{ page.title | escape }}</h1>
+            {%- endif -%}
+            
+            {%- if page.author -%}
+                 {% for author in page.author %}
+                 {%- assign date_format = site.date_format | default: "%b %-d, %Y" -%}
+                <p class="padding-none"> Written by <a href="/about">{{ author }}</a> dated on {{ page.date | date: date_format }}</p>
+                    {%- if forloop.last == false %}, {% endif -%}
+                {% endfor %}
+              {%- endif -%}
+            
+            {%- if page.subtitle -%}
+              <p class="text-lead">{{ page.subtitle | escape }}</p>
+            {%- endif -%}
+        
+            {{ content }}
+          
+            
+          </article>
+    </div>
+    <div class="sm-12 md-4 col sidebar">
+        
+        <div class="card">
+            <div class="card-header">
+                Recent posts
+            </div>
+            <ul>
+                {% for post in site.posts %}
+                  <li>
+                    <a href="{{ post.url }}">{{ post.title }}</a>
+                    <span class="post-date">{{ post.date | date: "%B %d, %Y" }}</span>
+                  </li>
+                {% endfor %}
+                </ul>
+        </div>
+
+
+        <div class="card">
+            <div class="card-header">
+                Categories
+            </div>
+            <ul>
+                {% assign all_categories = "" %}
+                {% for post in site.posts %}
+                  {% assign post_categories = post.categories %}
+                  {% for category in post_categories %}
+                    {% assign all_categories = all_categories | append: category | append: "," %}
+                  {% endfor %}
+                {% endfor %}
+                
+                {% assign unique_categories = all_categories | split: "," | uniq %}
+                {% for category in unique_categories %}
+                  <li>
+                    <a href="/category/{{ category | slugify }}">{{ category }}</a>
+                  </li>
+                {% endfor %}
+                </ul>
+        </div>       
+
+
+    </div>
+  </div>
+
+
+
+
+
+
+
+ 
